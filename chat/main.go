@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
-	"text/template"
 	"path/filepath"
 	"sync"
+	"text/template"
 )
 
 type templateHandler struct {
@@ -30,18 +30,18 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 
-//	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-//		w.Write([]byte(`
-//			<html>
-//				<head>
-//					<titleaチャット</title>
-//				</head>
-//				<body>
-//					チャットをしましょう！
-//				</body>
-//			</html>
-//		`))
-//	})
+	//	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	//		w.Write([]byte(`
+	//			<html>
+	//				<head>
+	//					<titleaチャット</title>
+	//				</head>
+	//				<body>
+	//					チャットをしましょう！
+	//				</body>
+	//			</html>
+	//		`))
+	//	})
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)

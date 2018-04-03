@@ -9,20 +9,20 @@ import (
 
 type room struct {
 	forward chan []byte
-	join chan *client
-	leave chan *client
+	join    chan *client
+	leave   chan *client
 	clients map[*client]bool
 }
 
 func (r *room) run() {
 	for {
 		select {
-		case client := <- r.join:
+		case client := <-r.join:
 			r.clients[client] = true
-		case client := <- r.leave:
+		case client := <-r.leave:
 			delete(r.clients, client)
 			close(client.send)
-		case msg := <- r.forward:
+		case msg := <-r.forward:
 			for client := range r.clients {
 				select {
 				case client.send <- msg:
@@ -37,11 +37,11 @@ func (r *room) run() {
 }
 
 const (
-	socketBufferSize = 1024
+	socketBufferSize  = 1024
 	messageBufferSize = 256
 )
 
-var upgrader = &websocket.Upgrader {ReadBufferSize: socketBufferSize, WriteBufferSize: messageBufferSize}
+var upgrader = &websocket.Upgrader{ReadBufferSize: socketBufferSize, WriteBufferSize: messageBufferSize}
 
 func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	socket, err := upgrader.Upgrade(w, req, nil)
@@ -51,10 +51,10 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	client := &client {
+	client := &client{
 		socket: socket,
-		send: make(chan []byte, messageBufferSize),
-		room: r,
+		send:   make(chan []byte, messageBufferSize),
+		room:   r,
 	}
 
 	r.join <- client
