@@ -4,11 +4,11 @@
   <title>Chat</title>
   <style>
     input {
-      display: : block
+      display: block
     }
 
     ul {
-      list-style: : none
+      list-style: none
     }
   </style>
 </head>
@@ -20,6 +20,38 @@
     <textarea></textarea>
     <input type="submit" value="Send" />
   </form>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    $(function () {
+      var socket = null;
+      var msgBox = $("#chatbox textarea");
+      var messages = $("#messages");
+
+      $("#chatbox").submit(function () {
+        if (!msgBox.val()) return false;
+
+        if (!socket) {
+          alert("Error: There is no WebSocket connection.");
+          return false;
+        }
+        socket.send(msgBox.val());
+        msgBox.val("");
+        return false;
+      });
+
+      if (!window["WebSocket"]) {
+        alert("Error: This browser dose not correspond WebSocket.");
+      } else {
+        socket = new WebSocket("ws://localhost:8080/room");
+        socket.onclose = function () {
+          alert("The connection is completed.");
+        }
+        socket.onmessage = function (e) {
+          messages.append($("<li>").text(e.data));
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>

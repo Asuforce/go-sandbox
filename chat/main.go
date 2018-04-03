@@ -21,10 +21,10 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				filepath.Join("templates", t.filename),
 			),
 		)
-		if err := t.templ.Execute(w, nil); err != nil {
-			log.Fatal("TemplateExecution:", err)
-		}
 	})
+	if err := t.templ.Execute(w, nil); err != nil {
+		log.Fatal("TemplateExecution:", err)
+	}
 }
 
 func main() {
