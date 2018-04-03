@@ -28,23 +28,13 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	r := newRoom()
 	http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/room", r)
 
-	//	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	//		w.Write([]byte(`
-	//			<html>
-	//				<head>
-	//					<titleaチャット</title>
-	//				</head>
-	//				<body>
-	//					チャットをしましょう！
-	//				</body>
-	//			</html>
-	//		`))
-	//	})
+	go r.run()
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
-
 }
