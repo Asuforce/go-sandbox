@@ -42,7 +42,7 @@
       if (!window["WebSocket"]) {
         alert("Error: This browser dose not correspond WebSocket.");
       } else {
-        socket = new WebSocket("ws://localhost:8080/room");
+        socket = new WebSocket("ws://{{.Host}}/room");
         socket.onclose = function () {
           alert("The connection is completed.");
         }
