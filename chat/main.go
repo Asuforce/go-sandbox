@@ -11,6 +11,10 @@ import (
 
 	"github.com/Asuforce/gogo/trace"
 	"github.com/BurntSushi/toml"
+	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/facebook"
+	"github.com/stretchr/gomniauth/providers/github"
+	"github.com/stretchr/gomniauth/providers/google"
 )
 
 type templateHandler struct {
@@ -52,6 +56,13 @@ func main() {
 	if _, err := toml.DecodeFile("./config.local.toml", &c); err != nil {
 		log.Fatalf("Failed to decode file : %s(MISSING)", err)
 	}
+
+	gomniauth.SetSecurityKey(c.SecurityKey)
+	gomniauth.WithProviders(
+		facebook.New(c.Facebook.ClientID, c.Facebook.ClientSecret, "http://localhost:8080/auth/callback/facebook"),
+		github.New(c.GitHub.ClientID, c.GitHub.ClientSecret, "http://localhost:8080/auth/callback/github"),
+		google.New(c.Google.ClientID, c.Google.ClientSecret, "http://localhost:8080/auth/callback/google"),
+	)
 
 	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
