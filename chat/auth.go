@@ -71,7 +71,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatalln("Failed to get the user:", provider, "-", err)
 		}
 
-		authCookieValue := objx.New(map[string]interface{}{"name": user.Name()}).MustBase64()
+		authCookieValue := objx.New(map[string]interface{}{
+			"name":       user.Name(),
+			"avatar_url": user.AvatarURL(),
+		}).MustBase64()
 		http.SetCookie(w, &http.Cookie{
 			Name:  "auth",
 			Value: authCookieValue,
