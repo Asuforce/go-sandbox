@@ -1,0 +1,13 @@
+security_key = "<application unique key>"
+
+[Facebook]
+client_id = "<your facebook api client_id>"
+client_secret = "<your facebook api client_secret>"
+
+[GitHub]
+client_id = "<your github api client_id>"
+client_secret = "<your github api client_secret>"
+
+[Google]
+client_id = "<your google api client_id>"
+client_secret = "<your google api client_secret>"

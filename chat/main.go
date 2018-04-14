@@ -10,12 +10,25 @@ import (
 	"text/template"
 
 	"github.com/Asuforce/gogo/trace"
+	"github.com/BurntSushi/toml"
 )
 
 type templateHandler struct {
 	once     sync.Once
 	filename string
 	templ    *template.Template
+}
+
+type tomlConfig struct {
+	SecurityKey string `toml:"security_key"`
+	Facebook    authInfo
+	GitHub      authInfo
+	Google      authInfo
+}
+
+type authInfo struct {
+	ClientID     string `toml:"client_id"`
+	ClientSecret string `toml:"client_secret"`
 }
 
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +47,11 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var addr = flag.String("addr", ":8080", "Application address")
 	flag.Parse()
+
+	var c tomlConfig
+	if _, err := toml.DecodeFile("./config.local.toml", &c); err != nil {
+		log.Fatalf("Failed to decode file : %s(MISSING)", err)
+	}
 
 	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
