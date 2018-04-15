@@ -13,9 +13,7 @@ func TestAuthAvatar(t *testing.T) {
 	client.userData = map[string]interface{}{"avatar_url": testURL}
 	if url, err := authAvatar.GetAvatarURL(client); err != nil {
 		t.Error("AuthAvatar.GetAvatarURL should not return Error")
-	} else {
-		if url != testURL {
-			t.Error("AuthAvatar.GetAvatarURL should return correct URL")
-		}
+	} else if url != testURL {
+		t.Error("AuthAvatar.GetAvatarURL should return correct URL")
 	}
 }
