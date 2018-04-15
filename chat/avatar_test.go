@@ -20,13 +20,13 @@ func TestAuthAvatar(t *testing.T) {
 
 func TestGravatarAvatar(t *testing.T) {
 	const (
-		email      = "MyEmailAddress@example.com"
-		correctURL = "//www.gravatar.com/avatar/0bc83cb571cd1c50ba6f3e8a78ef1346"
+		userid     = "0bc83cb571cd1c50ba6f3e8a78ef1346"
+		correctURL = "//www.gravatar.com/avatar/" + userid
 	)
 
 	var gravatarAvatar GravatarAvatar
 	client := new(client)
-	client.userData = map[string]interface{}{"email": email}
+	client.userData = map[string]interface{}{"userid": userid}
 
 	if url, err := gravatarAvatar.GetAvatarURL(client); err != nil {
 		t.Error("GravatarAvatar.GetAvatarURL should return ErrNoAvatarURL when the value dosen't exist")
