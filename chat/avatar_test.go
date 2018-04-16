@@ -5,18 +5,28 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	gomniauthtest "github.com/stretchr/gomniauth/test"
 )
 
 func TestAuthAvatar(t *testing.T) {
 	var authAvatar AuthAvatar
-	client := new(client)
-	if _, err := authAvatar.GetAvatarURL(client); err != ErrNoAvatarURL {
+	testUser := &gomniauthtest.TestUser{}
+
+	testUser.On("AvatarURL").Return("", ErrNoAvatarURL)
+	testChatUser := &chatUser{User: testUser}
+
+	if _, err := authAvatar.GetAvatarURL(testChatUser); err != ErrNoAvatarURL {
 		t.Error("AuthAvatar.GetAvatarURL should return ErrNoAvatarURL when the value dosen't exist")
 	}
 
 	const testURL = "http://url-to-avatar/"
-	client.userData = map[string]interface{}{"avatar_url": testURL}
-	if url, err := authAvatar.GetAvatarURL(client); err != nil {
+	testUser = &gomniauthtest.TestUser{}
+	testChatUser.User = testUser
+
+	testUser.On("AvatarURL").Return(testURL, nil)
+
+	if url, err := authAvatar.GetAvatarURL(testChatUser); err != nil {
 		t.Error("AuthAvatar.GetAvatarURL should not return Error")
 	} else if url != testURL {
 		t.Error("AuthAvatar.GetAvatarURL should return correct URL")
@@ -25,15 +35,14 @@ func TestAuthAvatar(t *testing.T) {
 
 func TestGravatarAvatar(t *testing.T) {
 	const (
-		userid     = "0bc83cb571cd1c50ba6f3e8a78ef1346"
-		correctURL = "//www.gravatar.com/avatar/" + userid
+		uniqueid   = "abc"
+		correctURL = "//www.gravatar.com/avatar/abc"
 	)
 
 	var gravatarAvatar GravatarAvatar
-	client := new(client)
-	client.userData = map[string]interface{}{"userid": userid}
+	user := &chatUser{uniqueID: uniqueid}
 
-	if url, err := gravatarAvatar.GetAvatarURL(client); err != nil {
+	if url, err := gravatarAvatar.GetAvatarURL(user); err != nil {
 		t.Error("GravatarAvatar.GetAvatarURL should return ErrNoAvatarURL when the value dosen't exist")
 	} else if url != correctURL {
 		t.Errorf("GravatarAvatar.GetAvatarURL returned the inccorect url of %s", url)
@@ -51,10 +60,9 @@ func TestFileSystemAvatar(t *testing.T) {
 	defer func() { os.Remove(filename) }()
 
 	var fileSystemAvatar FileSystemAvatar
-	client := new(client)
-	client.userData = map[string]interface{}{"userid": userid}
+	user := &chatUser{uniqueID: userid}
 
-	if url, err := fileSystemAvatar.GetAvatarURL(client); err != nil {
+	if url, err := fileSystemAvatar.GetAvatarURL(user); err != nil {
 		t.Error("FileSystemAvatar.GetAvatarURL should return ErrNoAvatarURL when the value dosen't exist")
 	} else if url != correctURL {
 		t.Errorf("FileSystemAvatar.GetAvatarURL returned the inccorect url of %s", url)
