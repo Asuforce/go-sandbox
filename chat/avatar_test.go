@@ -1,6 +1,11 @@
 package main
 
-import "testing"
+import (
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"testing"
+)
 
 func TestAuthAvatar(t *testing.T) {
 	var authAvatar AuthAvatar
@@ -32,5 +37,26 @@ func TestGravatarAvatar(t *testing.T) {
 		t.Error("GravatarAvatar.GetAvatarURL should return ErrNoAvatarURL when the value dosen't exist")
 	} else if url != correctURL {
 		t.Errorf("GravatarAvatar.GetAvatarURL returned the inccorect url of %s", url)
+	}
+}
+
+func TestFileSystemAvatar(t *testing.T) {
+	const (
+		userid     = "abc"
+		correctURL = "/avatars/abc.jpg"
+	)
+
+	filename := filepath.Join("avatars", "abc.jpg")
+	ioutil.WriteFile(filename, []byte{}, 0777)
+	defer func() { os.Remove(filename) }()
+
+	var fileSystemAvatar FileSystemAvatar
+	client := new(client)
+	client.userData = map[string]interface{}{"userid": userid}
+
+	if url, err := fileSystemAvatar.GetAvatarURL(client); err != nil {
+		t.Error("FileSystemAvatar.GetAvatarURL should return ErrNoAvatarURL when the value dosen't exist")
+	} else if url != correctURL {
+		t.Errorf("FileSystemAvatar.GetAvatarURL returned the inccorect url of %s", url)
 	}
 }
