@@ -18,6 +18,8 @@ import (
 	"github.com/stretchr/objx"
 )
 
+var avatars Avatar = UserFileSystemAvatar
+
 type templateHandler struct {
 	once     sync.Once
 	filename string
