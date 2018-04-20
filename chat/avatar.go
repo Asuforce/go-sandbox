@@ -12,9 +12,20 @@ type Avatar interface {
 	GetAvatarURL(ChatUser) (string, error)
 }
 
+type TryAvatars []Avatar
+
+func (a TryAvatars) GetAvatarURL(u ChatUser) (string, error) {
+	for _, avatar := range a {
+		if url, err := avatar.GetAvatarURL(u); err == nil {
+			return url, nil
+		}
+	}
+	return "", ErrNoAvatarURL
+}
+
 type AuthAvatar struct{}
 
-var UserAuthAvatar AuthAvatar
+var UseAuthAvatar AuthAvatar
 
 func (AuthAvatar) GetAvatarURL(u ChatUser) (string, error) {
 	if url := u.AvatarURL(); url != "" {
@@ -25,7 +36,7 @@ func (AuthAvatar) GetAvatarURL(u ChatUser) (string, error) {
 
 type GravatarAvatar struct{}
 
-var UserGravatarAvatar GravatarAvatar
+var UseGravatar GravatarAvatar
 
 func (GravatarAvatar) GetAvatarURL(u ChatUser) (string, error) {
 	return "//www.gravatar.com/avatar/" + u.UniqueID(), nil
@@ -33,7 +44,7 @@ func (GravatarAvatar) GetAvatarURL(u ChatUser) (string, error) {
 
 type FileSystemAvatar struct{}
 
-var UserFileSystemAvatar FileSystemAvatar
+var UseFileSystemAvatar FileSystemAvatar
 
 func (FileSystemAvatar) GetAvatarURL(u ChatUser) (string, error) {
 	if files, err := ioutil.ReadDir("avatars"); err == nil {
