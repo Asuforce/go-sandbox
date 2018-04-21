@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"math/rand"
 	"os"
@@ -18,6 +19,12 @@ var tlds = []string{
 const allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789_-"
 
 func main() {
+	var tld = flag.String("f", "", "Top level domain")
+	flag.Parse()
+	if *tld != "" {
+		tlds = append(tlds, *tld)
+	}
+
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	s := bufio.NewScanner(os.Stdin)
