@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/Asuforce/gogo/todo/src/model"
+	"github.com/gin-gonic/gin"
 )
 
 func TasksGET(c *gin.Context) {
@@ -40,4 +40,24 @@ func TasksGET(c *gin.Context) {
 	}
 	fmt.Println(tasks)
 	c.JSON(http.StatusOK, gin.H{"tasks": tasks})
+}
+
+func TasksPOST(c *gin.Context) {
+	db := model.DBConnect()
+
+	title := c.PostForm("title")
+	now := time.Now()
+
+	task := &model.Task{
+		Title:     title,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
+
+	err := task.Save(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("post sent. title: %s", title)
 }
