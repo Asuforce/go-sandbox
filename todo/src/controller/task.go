@@ -87,3 +87,21 @@ func TaskPATCH(c *gin.Context) {
 	fmt.Println(task)
 	c.JSON(http.StatusOK, gin.H{"task": task})
 }
+
+func TaskDELETE(c *gin.Context) {
+	db := model.DBConnect()
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	task, err := model.TaskByID(db, uint(id))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = task.Delete(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.JSON(http.StatusOK, "deleted")
+}
