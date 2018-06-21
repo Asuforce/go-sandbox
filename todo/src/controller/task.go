@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Asuforce/gogo/todo/src/model"
@@ -60,4 +61,29 @@ func TaskPOST(c *gin.Context) {
 	}
 
 	fmt.Printf("post sent. title: %s", title)
+}
+
+func TaskPATCH(c *gin.Context) {
+	db := model.DBConnect()
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	task, err := model.TaskByID(db, uint(id))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	title := c.PostForm("title")
+	now := time.Now()
+
+	task.Title = title
+	task.UpdatedAt = now
+
+	err = task.Update(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(task)
+	c.JSON(http.StatusOK, gin.H{"task": task})
 }
