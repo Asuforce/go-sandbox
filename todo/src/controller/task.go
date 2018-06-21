@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TasksGET(c *gin.Context) {
+func TaskGET(c *gin.Context) {
 	db := model.DBConnect()
 	result, err := db.Query("SELECT * FROM task ORDER BY id DESC")
 	if err != nil {
@@ -42,7 +42,7 @@ func TasksGET(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"tasks": tasks})
 }
 
-func TasksPOST(c *gin.Context) {
+func TaskPOST(c *gin.Context) {
 	db := model.DBConnect()
 
 	title := c.PostForm("title")
