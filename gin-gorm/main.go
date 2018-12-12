@@ -21,7 +21,7 @@ var (
 )
 
 func main() {
-	db, err := gorm.Open("sqlite3", "./gorm.db")
+	db, err = gorm.Open("sqlite3", "./gorm.db")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -32,7 +32,16 @@ func main() {
 	r := gin.Default()
 	r.GET("/people", getPeople)
 	r.GET("/people/:id", getPerson)
+	r.POST("/people", createPerson)
 	r.Run()
+}
+
+func createPerson(c *gin.Context) {
+	var person Person
+	c.BindJSON(&person)
+
+	db.Create(&person)
+	c.JSON(200, person)
 }
 
 func getPerson(c *gin.Context) {
