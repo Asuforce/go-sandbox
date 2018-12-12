@@ -31,7 +31,19 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/people", getPeople)
+	r.GET("/people/:id", getPerson)
 	r.Run()
+}
+
+func getPerson(c *gin.Context) {
+	id := c.Params.ByName("id")
+	var person Person
+	if err := db.Where("id = ?", id).First(&person).Error; err != nil {
+		c.AbortWithStatus(404)
+		fmt.Println(err)
+	} else {
+		c.JSON(200, person)
+	}
 }
 
 func getPeople(c *gin.Context) {
