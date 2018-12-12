@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // Person struct
@@ -22,7 +22,7 @@ var (
 )
 
 func main() {
-	db, err = gorm.Open("sqlite3", "./gorm.db")
+	db, err = gorm.Open("postgres", "host=0.0.0.0 port=5432 user=gorm dbname=gorm password=gorm sslmode=disable")
 	if err != nil {
 		fmt.Println(err)
 	}
