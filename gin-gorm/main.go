@@ -7,12 +7,17 @@ import (
 )
 
 func main() {
-	r := gin.Default()
 	var ctrl person.Controller
-	r.GET("/people", ctrl.Index)
-	r.GET("/people/:id", ctrl.Show)
-	r.POST("/people", ctrl.Create)
-	r.PUT("/people/:id", ctrl.Update)
-	r.DELETE("/people/:id", ctrl.Delete)
+
+	r := gin.Default()
+
+	p := r.Group("/people")
+	{
+		p.GET("", ctrl.Index)
+		p.GET("/:id", ctrl.Show)
+		p.POST("", ctrl.Create)
+		p.PUT("/:id", ctrl.Update)
+		p.DELETE("/:id", ctrl.Delete)
+	}
 	r.Run()
 }
