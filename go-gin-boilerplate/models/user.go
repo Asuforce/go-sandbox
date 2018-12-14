@@ -1,78 +1,66 @@
 package models
 
 import (
-	"errors"
-	"log"
-	"time"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/satori/go.uuid"
-	"github.com/vsouza/go-gin-boilerplate/db"
-	"github.com/vsouza/go-gin-boilerplate/forms"
+	"github.com/gin-gonic/gin"
+	"github.com/asuforce/go-sandbox/go-gin-boilerplate/db"
 )
 
+// User model
 type User struct {
-	ID        string `json:"user_id,omitempty"`
-	Name      string `json:"name"`
-	BirthDay  string `json:"birthday"`
-	Gender    string `json:"gender"`
-	PhotoURL  string `json:"photo_url"`
-	Time      int64  `json:"current_time"`
-	Active    bool   `json:"active,omitempty"`
-	UpdatedAt int64  `json:"updated_at,omitempty"`
+	ID        uint   `json:"id"`
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+	City      string `json:"city"`
 }
 
-func (h User) Signup(userPayload forms.UserSignup) (*User, error) {
+// GetAll is get all person
+func (h User) GetAll() (*[]User, error) {
 	db := db.GetDB()
-	id := uuid.NewV4()
-	user := User{
-		ID:        id.String(),
-		Name:      userPayload.Name,
-		BirthDay:  userPayload.BirthDay,
-		Gender:    userPayload.Gender,
-		PhotoURL:  userPayload.PhotoURL,
-		Time:      time.Now().UnixNano(),
-		Active:    true,
-		UpdatedAt: time.Now().UnixNano(),
-	}
-	item, err := dynamodbattribute.MarshalMap(user)
-	if err != nil {
-		errors.New("error when try to convert user data to dynamodbattribute")
-		return nil, err
-	}
-	params := &dynamodb.PutItemInput{
-		Item:      item,
-		TableName: aws.String("TableUsers"),
-	}
-	if _, err := db.PutItem(params); err != nil {
-		log.Println(err)
-		return nil, errors.New("error when try to save data to database")
-	}
-	return &user, nil
-}
-
-func (h User) GetByID(id string) (*User, error) {
-	db := db.GetDB()
-	params := &dynamodb.GetItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			"user_id": {
-				S: aws.String(id),
-			},
-		},
-		TableName:      aws.String("TableUsers"),
-		ConsistentRead: aws.Bool(true),
-	}
-	resp, err := db.GetItem(params)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	var user *User
-	if err := dynamodbattribute.UnmarshalMap(resp.Item, &user); err != nil {
-		log.Println(err)
+	var user *[]User
+	if err := db.Find(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
+}
+
+// CreateModel is create person model
+func (h User) CreateModel(c *gin.Context) (*User, error) {
+	var user *User
+	c.BindJSON(&user)
+
+	if err := db.Create(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// GetById is get a person
+func (h User) GetById(id string) (*User, error) {
+	var user *User
+	if err := db.Where("id = ?", id).First(&p).Error; err != nil {
+		return p, err
+	}
+	return p, nil
+}
+
+// UpdateById is update a person
+func (h User) UpdateById(id string, c *gin.Context) (*User, error) {
+	var user *User
+	if err := db.Where("id = ?", id).First(&p).Error; err != nil {
+		return user, err
+	}
+
+	c.BindJSON(&user)
+	db.Save(&user)
+
+	return user, nil
+}
+
+// DeleteById is delete a person
+func (h User) DeleteById(id string) error {
+	var user *User
+	if err := db.Where("id = ?", id).Delete(&user).Error; err != nil {
+		return err
+	}
+	return nil
 }
