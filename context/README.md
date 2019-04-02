@@ -9,6 +9,10 @@ main で 親の context を cancel した後、 defer で 子の context の can
 
 ## Cancel branch goroutine
 
-理解できるように sequence を書いた。
+理解できるように sequence を書いた
 
 ![sequence figure](./cancel_branch_goroutine/sequence.jpg)
+
+## Cancel the blocking goroutine
+
+deadline を設定して、その時間になると cancel を呼び出す
