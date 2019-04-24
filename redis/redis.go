@@ -23,14 +23,13 @@ func main() {
 }
 
 func redisConnection() redis.Conn {
-
 	c, err := redis.Dial("tcp", ip_port)
 	if err != nil {
-		log.Fatalf("redis.Dial got error: %T", err)
+		log.Fatalf("redis.Dial got error: %v", err)
 	}
 	if _, err := c.Do("AUTH", password); err != nil {
 		c.Close()
-		log.Fatalf("c.DO(AUTH)  got error: %T", err)
+		log.Fatalf("c.DO(AUTH)  got error: %v", err)
 	}
 	return c
 }
@@ -42,7 +41,7 @@ func redisSet(key string, value string, c redis.Conn) {
 func redisGet(key string, c redis.Conn) string {
 	s, err := redis.String(c.Do("GET", key))
 	if err != nil {
-		log.Fatalf("redis.String got error: %f", err)
+		log.Fatalf("redis.String got error: %v", err)
 	}
 	return s
 }
