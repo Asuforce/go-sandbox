@@ -10,7 +10,7 @@ import (
 const (
 	key      = "KEY"
 	val      = "VALUE"
-	ip_port  = "127.0.0.1:6379"
+	ipPort   = "127.0.0.1:6379"
 	password = "foobared"
 )
 
@@ -23,7 +23,7 @@ func main() {
 }
 
 func redisConnection() redis.Conn {
-	c, err := redis.Dial("tcp", ip_port)
+	c, err := redis.Dial("tcp", ipPort)
 	if err != nil {
 		log.Fatalf("redis.Dial got error: %v", err)
 	}
