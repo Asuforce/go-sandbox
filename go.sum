@@ -1,3 +1,9 @@
+github.com/favclip/golidator v1.0.0 h1:nX3BzmMD4483JW2wwkPZeLaqqWU06uYzyTglnFljMyA=
+github.com/favclip/golidator v2.1.1+incompatible h1:ktb02g0J1vXnhB6LaTmffeROb5Wxacr6nJkw4cKs9/Q=
+github.com/favclip/golidator v2.1.1+incompatible/go.mod h1:ruXV1d2tSVPa7CCm99hW+DYn58ac/sM5eeL73+Y7k1w=
+github.com/favclip/ucon v1.0.0 h1:ZtyH5/u04RcxnqqAfWF+N7dGNdf20DukErpZEynKgcI=
+github.com/favclip/ucon v2.2.1+incompatible h1:e+WXuCWcbqDAI/boTFGuKlzgfw+FtAycscaib/v0MUk=
+github.com/favclip/ucon v2.2.1+incompatible/go.mod h1:QIZiWd938m7Mf8T+lGtDLQe9xVWnJhTPuQwGKfEb9dw=
 github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3 h1:fO9A67/izFYFYky7l1pDP5Dr0BTCRkaQJUG6Jm5ehsk=
 github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3/go.mod h1:Ey4uAp+LvIl+s5jRbOHLcZpUDnkjLBROl15fZLwPlTM=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
