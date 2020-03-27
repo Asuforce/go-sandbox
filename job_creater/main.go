@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"math/rand"
 	"time"
 
@@ -25,12 +25,12 @@ const (
 func main() {
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err.Error())
 	}
 	// creates the clientset
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	namespace := "job-test"
@@ -70,12 +70,12 @@ func main() {
 		},
 	}
 
-	fmt.Println("Creating job...")
+	log.Println("Creating job...")
 	result, err := c.Create(job)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	fmt.Printf("Created Job %q.\n", result.GetObjectMeta().GetName())
+	log.Printf("Created Job %q.\n", result.GetObjectMeta().GetName())
 }
 
 func int32Ptr(i int32) *int32 { return &i }
