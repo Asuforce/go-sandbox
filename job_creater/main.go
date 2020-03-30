@@ -76,6 +76,22 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("Created Job %q.\n", result.GetObjectMeta().GetName())
+
+	for {
+		pods, err := c.List(metav1.ListOptions{})
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("There are %d pods in the cluster \n", len(pods.Items))
+
+		result, err := c.Get(jobName, metav1.GetOptions{})
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Get Job %q.\n", result.GetName())
+
+		time.Sleep(10 * time.Second)
+	}
 }
 
 func int32Ptr(i int32) *int32 { return &i }
